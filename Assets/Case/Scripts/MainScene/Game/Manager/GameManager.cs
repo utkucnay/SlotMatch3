@@ -1,7 +1,7 @@
-using Case.MainScene.Board;
+using Case.Match3.Board;
 using Case.MainScene.CongratulationPopup;
 using Case.MainScene.Game.Signal;
-using Case.MainScene.Spin;
+using Case.Match3.Spin;
 using System;
 using UnityEngine.SceneManagement;
 using Zenject;

@@ -7,12 +7,12 @@ namespace Case.MainScene.CongratulationPopup
     {
         [Inject] CongratulationPopupView congratulationPopupView;
 
-        CongratulationPopupConfig congratulationPopupConfig = new();
+        [Inject] CongratulationPopupAnimationData congratulationPopupAnimationData;
 
         public async UniTask ShowViewAndStartAnimation()
         {
             congratulationPopupView.gameObject.SetActive(true);
-            await congratulationPopupView.GameEndAnimation(congratulationPopupConfig);
+            await congratulationPopupView.GameEndAnimation(congratulationPopupAnimationData);
         }
     }
 }

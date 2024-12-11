@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae136dacaaefbb4598669ceee4c5e01, type: 3}
+  m_Name: CandyConfig
+  m_EditorClassIdentifier: 
+  candyViewImage:
+    CandyType1: {fileID: 1097123012, guid: 52d6460cdadafa84e848a280a78630fc, type: 3}
+    CandyType2: {fileID: 2081307216, guid: 52d6460cdadafa84e848a280a78630fc, type: 3}
+    CandyType3: {fileID: -1347573733, guid: 52d6460cdadafa84e848a280a78630fc, type: 3}
+    CandyType4: {fileID: 1206025851, guid: 52d6460cdadafa84e848a280a78630fc, type: 3}
+    CandyType5: {fileID: 901354781, guid: 52d6460cdadafa84e848a280a78630fc, type: 3}
+    CandyType6: {fileID: -423847738, guid: 52d6460cdadafa84e848a280a78630fc, type: 3}
+    CandyType7: {fileID: 799739705, guid: 52d6460cdadafa84e848a280a78630fc, type: 3}

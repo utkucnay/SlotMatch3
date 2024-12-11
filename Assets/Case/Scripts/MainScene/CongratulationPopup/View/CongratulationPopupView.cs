@@ -10,7 +10,7 @@ namespace Case.MainScene.CongratulationPopup
         [SerializeField] private Transform[] particles;
         [SerializeField] private Transform[] particleEndPositions;
 
-        public async UniTask GameEndAnimation(CongratulationPopupConfig config)
+        public async UniTask GameEndAnimation(CongratulationPopupAnimationData animationData)
         {
             for (int i = 0; i < particles.Length; ++i)
             {
@@ -19,12 +19,12 @@ namespace Case.MainScene.CongratulationPopup
 
                 particle.DOJump(
                     particleEndPosition.transform.position, 
-                    config.gameEndAnimationJumpPower, 
-                    config.gameEndAnimationJumpCount, 
-                    config.gameEndAnimationDuration).SetEase(Ease.InBounce);
+                    animationData.gameEndAnimationJumpPower, 
+                    animationData.gameEndAnimationJumpCount, 
+                    animationData.gameEndAnimationDuration).SetEase(Ease.InBounce);
             }
 
-            await UniTask.Delay(TimeSpan.FromSeconds(config.gameEndAnimationDuration + config.gameEndAnimationDurationOffset));
+            await UniTask.Delay(TimeSpan.FromSeconds(animationData.gameEndAnimationDuration + animationData.gameEndAnimationDurationOffset));
         }
     }
 }
