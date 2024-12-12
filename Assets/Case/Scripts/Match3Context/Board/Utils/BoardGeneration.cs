@@ -1,3 +1,4 @@
+using Case.Collection;
 using Case.Match3.Candy;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ namespace Case.Match3.Board
     internal class BoardGeneration
     {
         static Random random = new Random();
-        public static List<CandyViewModel> CreateInitialBoard(int row, int column)
+        public static Grid<CandyViewModel> CreateInitialBoard(int row, int column)
         {
-            List<CandyViewModel> candyViewModels = new();
+            Grid<CandyViewModel> candyViewModels = new(row, column);
 
             CandyType[] candyTypes = new CandyType[column];
             var candyTypeValues = Enum.GetNames(typeof(CandyType)).ToList();
@@ -28,29 +29,31 @@ namespace Case.Match3.Board
             {
                 for (int x = 0; x < row; x++)
                 {
-                    candyViewModels.Add(new CandyViewModel(candyTypes[y]));
+                    candyViewModels[x, y] = new CandyViewModel(candyTypes[y]);
                 }
             }
 
             return candyViewModels;
         }
 
-        public static List<CandyViewModel> CreateRandomBoard(int row, int column)
+        public static Grid<CandyViewModel> CreateRandomBoard(int row, int column)
         {
-            List<CandyViewModel> candyViewModels = new();
+            Grid<CandyViewModel> candyViewModels = new(row, column);
 
-            int count = row * column;
-            for (int i = 0; i < count; ++i)
+            for (int y = 0; y < column; y++)
             {
-                candyViewModels.Add(CandyViewModel.GetRandomViewModel());
+                for (int x = 0; x < row; x++)
+                {
+                    candyViewModels[x, y] = CandyViewModel.GetRandomViewModel();
+                }
             }
 
             return candyViewModels;
         }
 
-        public static List<CandyViewModel> CreateBoard(int row, int column, int minCount)
+        public static Grid<CandyViewModel> CreateBoard(int row, int column, int minCount)
         {
-            List<CandyViewModel> candyViewModels = new();
+            Grid<CandyViewModel> candyViewModels = new(row, column);
 
             List<CandyType> allCandyTypes = new();
 
@@ -60,45 +63,45 @@ namespace Case.Match3.Board
                 allCandyTypes.Add(candyType);
             }
 
-            List<List<CandyType>> posCandyTypes = new();
+            Grid<List<CandyType>> posCandyTypes = new(row, column);
 
             int count = row * column;
 
-            for (int i = 0; i < count; i++)
+            for (int y = 0; y < column; y++)
             {
-                posCandyTypes.Add(new(allCandyTypes));
+                for (int x = 0; x < row; x++)
+                {
+                    posCandyTypes[x, y] = new List<CandyType>(allCandyTypes);
+                }
             }
 
-            for (int i = 0; i < count; i++)
+            for (int y = 0; y < column; y++)
             {
-                candyViewModels.Add(new(posCandyTypes[i][random.Next(posCandyTypes[i].Count)]));
-
-                foreach (int index in FindRadiusIndexes(i, row, column, minCount + 1))
+                for (int x = 0; x < row; x++)
                 {
-                    if (index >= candyViewModels.Count || index == i)
-                        continue;
+                    candyViewModels[x, y] = new(posCandyTypes[x, y][random.Next(posCandyTypes[x, y].Count)]);
 
-                    if (candyViewModels[i].CandyType == candyViewModels[index].CandyType)
+                    foreach (var (fX, fY) in FindRadiusIndexes(x, y, row, column, minCount + 1))
                     {
-                        var firstIndexRow = i % row;
-                        var firstIndexColumn = i / row;
-
-                        var secondIndexRow = i % row;
-                        var secondIndexColumn = i / row;
-
-                        var distance = Math.Abs(secondIndexColumn - firstIndexColumn) + Math.Abs(secondIndexRow - firstIndexRow) - 1;
-
-                        if (distance > minCount)
+                        if (fX >= candyViewModels.SizeX || fY >= candyViewModels.SizeY || (x == fX && y == fY))
                             continue;
 
-                        foreach (int removeItemIndex in FindRadiusIndexes(index, row, column, minCount))
+                        if (candyViewModels[x, y].CandyType == candyViewModels[fX, fY].CandyType)
                         {
-                            posCandyTypes[removeItemIndex].Remove(candyViewModels[i].CandyType);
-                        }
+                            var distance = Math.Abs(fY - y) + Math.Abs(fX - x) - 1;
 
-                        foreach (int removeItemIndex in FindRadiusIndexes(i, row, column, minCount))
-                        {
-                            posCandyTypes[removeItemIndex].Remove(candyViewModels[i].CandyType);
+                            if (distance > minCount)
+                                continue;
+
+                            foreach (var (removeFX, removeFY) in FindRadiusIndexes(fX, fY, row, column, minCount))
+                            {
+                                posCandyTypes[removeFX, removeFY].Remove(candyViewModels[x, y].CandyType);
+                            }
+
+                            foreach (var (removeX, removeY) in FindRadiusIndexes(x, y, row, column, minCount))
+                            {
+                                posCandyTypes[removeX, removeY].Remove(candyViewModels[x, y].CandyType);
+                            }
                         }
                     }
                 }
@@ -107,12 +110,9 @@ namespace Case.Match3.Board
             return candyViewModels;
         }
 
-        private static List<int> FindRadiusIndexes(int index, int row, int column, int radius)
+        private static List<(int, int)> FindRadiusIndexes(int currentRow, int currentColumn, int row, int column, int radius)
         {
-            List<int> allRadiusIndexes = new();
-
-            int currentRow = index % row;
-            int currentColumn = index / row;
+            List<(int, int)> allRadiusIndexes = new();
 
             currentRow -= radius;
             currentColumn -= radius;
@@ -132,7 +132,7 @@ namespace Case.Match3.Board
 
                     if (euclideanDistance <= radius)
                     {
-                        allRadiusIndexes.Add(y * row + x);
+                        allRadiusIndexes.Add((x, y));
                     }
                 }
             }

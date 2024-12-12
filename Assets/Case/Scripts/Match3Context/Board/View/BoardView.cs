@@ -31,7 +31,7 @@ namespace Case.Match3.Board
             gridLayout.count = new Vector2Int(row, column);
             secretGridLayout.count = new Vector2Int(row, 1);
 
-            List<CandyViewModel> candyViewModels = BoardGeneration.CreateInitialBoard(row, column);
+            Grid<CandyViewModel> candyViewModels = BoardGeneration.CreateInitialBoard(row, column);
 
             int count = row * column;
             for (int i = 0; i < count; i++)
